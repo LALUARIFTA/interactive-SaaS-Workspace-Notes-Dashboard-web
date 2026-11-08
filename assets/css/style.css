@@ -1,0 +1,174 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: linear-gradient(135deg, #d7d4f3 0%, #e6e4f9 50%, #d2cff0 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.4s ease;
+}
+
+html.dark body {
+  background: linear-gradient(135deg, #0b0c14 0%, #121424 50%, #090a10 100%);
+}
+
+/* Keyframe Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  70% { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+@keyframes dashDraw {
+  from { stroke-dashoffset: 240; }
+}
+
+.animate-stagger-1 { animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.03s both; }
+.animate-stagger-2 { animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.10s both; }
+.animate-stagger-3 { animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.17s both; }
+.animate-stagger-4 { animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both; }
+
+.float-illustration {
+  animation: floatSlow 4.5s ease-in-out infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(101, 88, 245, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(101, 88, 245, 0.45);
+}
+
+/* Curved Left Purple Sidebar Shape matching reference image */
+.curved-sidebar-wrapper {
+  position: absolute;
+  left: 0;
+  top: 155px;
+  bottom: 85px;
+  width: 68px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+/* SVG organic curves top & bottom */
+.sidebar-body {
+  pointer-events: auto;
+  background: #6558f5;
+  width: 66px;
+  height: 100%;
+  border-top-right-radius: 34px;
+  border-bottom-right-radius: 34px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px 0;
+  box-shadow: 8px 0 28px -6px rgba(101, 88, 245, 0.45);
+}
+
+/* Top concave curve connector */
+.sidebar-curve-top {
+  position: absolute;
+  top: -48px;
+  left: 0;
+  width: 38px;
+  height: 48px;
+  pointer-events: none;
+}
+
+/* Bottom concave curve connector */
+.sidebar-curve-bottom {
+  position: absolute;
+  bottom: -48px;
+  left: 0;
+  width: 38px;
+  height: 48px;
+  pointer-events: none;
+}
+
+/* Card interactive transitions */
+.widget-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+}
+.widget-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Ring Gauge animation */
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+/* Custom dashed border for Quick Add card */
+.dashed-lavender-box {
+  background-color: #efeffb;
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='24' ry='24' stroke='%23CAC6F5' stroke-width='2' stroke-dasharray='5%2c 5' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border-radius: 24px;
+}
+html.dark .dashed-lavender-box {
+  background-color: rgba(101, 88, 245, 0.12);
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='24' ry='24' stroke='%236558f5' stroke-width='2' stroke-dasharray='5%2c 5' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+}
+
+.dashed-assignment-btn {
+  background-color: #efeffb;
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%23D2CFF7' stroke-width='1.5' stroke-dasharray='4%2c 4' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border-radius: 16px;
+}
+html.dark .dashed-assignment-btn {
+  background-color: rgba(101, 88, 245, 0.14);
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%236558f5' stroke-width='1.5' stroke-dasharray='4%2c 4' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+}
+
+/* Tooltip styling for sidebar */
+.sidebar-tooltip {
+  position: absolute;
+  left: 76px;
+  background: #181b2c;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-6px);
+  pointer-events: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+  z-index: 60;
+}
+.sidebar-btn:hover .sidebar-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}

@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoteFlow — Dynamic Admin Panel Template</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Phosphor Icons for crisp UI iconography -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              purple: '#6558f5',
+              purpleLight: '#efeffb',
+              purpleSoft: '#e4e3f8',
+              navy: '#181b2c',
+              mint: '#68cfa3',
+              mintSoft: '#e6f7f0',
+              coral: '#e0536c',
+              coralSoft: '#fce8ec',
+              bgOuter: '#dcd9f5',
+              bgInner: '#f7f7fb',
+            }
+          },
+          boxShadow: {
+            'shell': '0 30px 70px -15px rgba(45, 40, 105, 0.18), 0 0 1px 1px rgba(255,255,255,0.6)',
+            'card': '0 10px 30px -8px rgba(35, 32, 85, 0.05)',
+            'card-hover': '0 18px 38px -6px rgba(99, 91, 255, 0.13)',
+            'pop': '0 18px 40px -10px rgba(28, 25, 68, 0.14)',
+            'feature': '0 16px 35px -8px rgba(35, 32, 85, 0.08)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body class="p-2 sm:p-5 lg:p-8 flex items-center justify-center min-h-screen relative select-none">
+
+  <!-- Decorative Outer Background Lines & Floating Dots (matching Dribbble framing) -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <!-- Top center diagonal white line -->
+    <svg class="absolute top-0 left-1/3 w-96 h-40 opacity-60" viewBox="0 0 400 160" fill="none">
+      <line x1="220" y1="0" x2="100" y2="80" stroke="white" stroke-width="1.5" />
+    </svg>
+    <!-- Bottom right wave line & purple dots -->
+    <svg class="absolute bottom-0 right-0 w-72 h-72 opacity-70" viewBox="0 0 300 300" fill="none">
+      <path d="M260 60 C210 120, 290 190, 250 260" stroke="white" stroke-width="1.5" fill="none"/>
+      <circle cx="282" cy="195" r="5" fill="#7c73e6" />
+      <circle cx="205" cy="292" r="14" fill="#2d3142" />
+    </svg>
+    <!-- Bottom left decorative circles -->
+    <div class="absolute bottom-24 left-3 w-3 h-3 rounded-full bg-[#68cfa3] opacity-80"></div>
+    <div class="absolute bottom-3 left-10 w-8 h-8 rounded-full border border-[#a5a1d4] opacity-50"></div>
+  </div>
+
+  <!-- MAIN APPLICATION SHELL -->
+  <div id="app-shell" class="relative z-10 w-full max-w-[1360px] min-h-[860px] bg-[#f7f7fb] dark:bg-[#131522] rounded-[34px] shadow-shell border border-white/80 dark:border-slate-800/80 transition-colors duration-300 overflow-hidden flex flex-col">
+
+    <!-- =====================================================
+         LEFT CURVED PURPLE SIDEBAR (EXACT ORGANIC SHAPE)
+         ===================================================== -->
+    <aside class="curved-sidebar-wrapper hidden md:block">
+      <!-- Top smooth organic curve SVG -->
+      <svg class="sidebar-curve-top" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 0 C0 26, 20 38, 38 48 L0 48 Z" fill="#6558f5"/>
+      </svg>
+
+      <!-- Main Purple Vertical Bar -->
+      <div class="sidebar-body">
+        <div class="flex flex-col items-center gap-4 w-full">
+          <!-- 1. Dashboard -->
+          <button onclick="switchPage('dashboard')" data-nav="dashboard" class="sidebar-btn group relative w-10 h-10 rounded-[14px] flex items-center justify-center transition-all duration-200 bg-white text-[#6558f5] shadow-md">
+            <i class="ph-fill ph-squares-four text-lg"></i>
+            <span class="sidebar-tooltip">Dashboard</span>
+          </button>
+
+          <!-- 2. Team & Profile -->
+          <button onclick="switchPage('team')" data-nav="team" class="sidebar-btn group relative w-10 h-10 rounded-[14px] flex items-center justify-center transition-all duration-200 text-white/80 hover:text-white hover:bg-white/15">
+            <i class="ph ph-user text-lg"></i>
+            <span class="sidebar-tooltip">Team & Profile</span>
+          </button>
+
+          <!-- 3. Analytics & Reports (with green pill badge like reference image) -->
+          <button onclick="switchPage('analytics')" data-nav="analytics" class="sidebar-btn group relative w-10 h-10 rounded-[14px] flex items-center justify-center transition-all duration-200 text-white/80 hover:text-white hover:bg-white/15">
+            <i class="ph ph-chart-pie-slice text-lg"></i>
+            <span class="absolute -right-2.5 top-2.5 bg-[#68cfa3] text-[#181b2c] text-[7px] font-extrabold px-1.5 py-[1px] rounded-full shadow-sm tracking-tighter">PRO</span>
+            <span class="sidebar-tooltip">Analytics & Reports</span>
+          </button>
+
+          <!-- 4. Notifications Center -->
+          <button onclick="switchPage('notifications')" data-nav="notifications" class="sidebar-btn group relative w-10 h-10 rounded-[14px] flex items-center justify-center transition-all duration-200 text-white/80 hover:text-white hover:bg-white/15">
+            <i class="ph ph-bell text-lg"></i>
+            <span id="sidebar-notif-dot" class="w-1.5 h-1.5 rounded-full bg-[#68cfa3] absolute top-2 right-2.5"></span>
+            <span class="sidebar-tooltip">Notifications</span>
+          </button>
+
+          <!-- 5. Calendar Schedule -->
+          <button onclick="switchPage('calendar')" data-nav="calendar" class="sidebar-btn group relative w-10 h-10 rounded-[14px] flex items-center justify-center transition-all duration-200 text-white/80 hover:text-white hover:bg-white/15">
+            <i class="ph ph-calendar-blank text-lg"></i>
+            <span class="sidebar-tooltip">Full Schedule</span>
+          </button>
+
+          <!-- 6. Inbox / Messages -->
+          <button onclick="switchPage('inbox')" data-nav="inbox" class="sidebar-btn group relative w-10 h-10 rounded-[14px] flex items-center justify-center transition-all duration-200 text-white/80 hover:text-white hover:bg-white/15">
+            <i class="ph ph-tray text-lg"></i>
+            <span class="w-1.5 h-1.5 rounded-full bg-white absolute top-2 right-2"></span>
+            <span class="sidebar-tooltip">Messages Inbox</span>
+          </button>
+
+          <!-- 7. Notes Studio -->
+          <button onclick="switchPage('notes')" data-nav="notes" class="sidebar-btn group relative w-10 h-10 rounded-[14px] flex items-center justify-center transition-all duration-200 text-white/80 hover:text-white hover:bg-white/15">
+            <i class="ph ph-note-pencil text-lg"></i>
+            <span class="sidebar-tooltip">Notes Studio</span>
+          </button>
+        </div>
+
+        <!-- 8. Bottom Sync / Cloud Status Button -->
+        <button onclick="triggerCloudSync()" class="sidebar-btn group relative w-10 h-10 rounded-[14px] flex items-center justify-center transition-all duration-200 text-white/80 hover:text-white hover:bg-white/15">
+          <i id="sync-sidebar-icon" class="ph ph-arrows-clockwise text-lg transition-transform duration-500"></i>
+          <span class="sidebar-tooltip">Cloud Sync (Up to date)</span>
+        </button>
+      </div>
+
+      <!-- Bottom smooth organic curve SVG -->
+      <svg class="sidebar-curve-bottom" viewBox="0 0 38 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 48 C0 22, 20 10, 38 0 L0 0 Z" fill="#6558f5"/>
+      </svg>
+    </aside>
+
+    <!-- Mobile Bottom Navigation Bar (visible on small screens) -->
+    <div class="md:hidden fixed bottom-3 left-4 right-4 z-50 bg-[#6558f5] text-white rounded-2xl px-3 py-2.5 shadow-xl flex items-center justify-around">
+      <button onclick="switchPage('dashboard')" class="p-2 rounded-xl bg-white/20"><i class="ph-fill ph-squares-four text-lg"></i></button>
+      <button onclick="switchPage('workflows')" class="p-2 rounded-xl hover:bg-white/10"><i class="ph ph-kanban text-lg"></i></button>
+      <button onclick="switchPage('notes')" class="p-2 rounded-xl hover:bg-white/10"><i class="ph ph-note-pencil text-lg"></i></button>
+      <button onclick="switchPage('calendar')" class="p-2 rounded-xl hover:bg-white/10"><i class="ph ph-calendar-blank text-lg"></i></button>
+      <button onclick="switchPage('analytics')" class="p-2 rounded-xl hover:bg-white/10"><i class="ph ph-chart-pie-slice text-lg"></i></button>
+      <button onclick="switchPage('integrations')" class="p-2 rounded-xl hover:bg-white/10"><i class="ph ph-plugs text-lg"></i></button>
+    </div>
+
+    <!-- =====================================================
+         TOP NAVIGATION BAR
+         ===================================================== -->
+    <header class="w-full pt-7 pb-4 px-6 sm:px-10 md:pl-24 md:pr-10 flex flex-wrap items-center justify-between gap-4 border-b border-transparent">
+      <!-- Left Nav Tabs -->
+      <nav class="flex items-center gap-6 sm:gap-8">
+        <button onclick="switchPage('dashboard')" id="topnav-dashboard" class="topnav-tab group relative py-2 flex items-center gap-2 text-[13px] font-bold text-[#181b2c] dark:text-white transition-colors">
+          <i class="ph-bold ph-four-petals text-[15px] text-[#181b2c] dark:text-white group-hover:rotate-45 transition-transform"></i>
+          <span>Dashboard</span>
+          <span class="topnav-indicator absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#6558f5] rounded-full transition-all duration-300"></span>
+        </button>
+
+        <button onclick="switchPage('workflows')" id="topnav-workflows" class="topnav-tab group relative py-2 flex items-center gap-2 text-[13px] font-medium text-slate-500 dark:text-slate-400 hover:text-[#181b2c] dark:hover:text-white transition-colors">
+          <i class="ph ph-git-Pull-request text-[15px]"></i>
+          <span>Workflows</span>
+          <span class="topnav-indicator absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#6558f5] rounded-full opacity-0 scale-x-50 transition-all duration-300"></span>
+        </button>
+
+        <button onclick="switchPage('integrations')" id="topnav-integrations" class="topnav-tab group relative py-2 flex items-center gap-2 text-[13px] font-medium text-slate-500 dark:text-slate-400 hover:text-[#181b2c] dark:hover:text-white transition-colors">
+          <i class="ph ph-circles-three-plus text-[15px]"></i>
+          <span>Integrations</span>
+          <span class="topnav-indicator absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#6558f5] rounded-full opacity-0 scale-x-50 transition-all duration-300"></span>
+        </button>
+      </nav>
+
+      <!-- Center Search Input -->
+      <div id="search-wrap" class="relative flex-1 max-w-[265px] hidden lg:block">
+        <i class="ph ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+        <input
+          id="global-search"
+          type="text"
+          placeholder="Search or type command"
+          oninput="handleGlobalSearch(this.value)"
+          onkeydown="if(event.key==='Enter') triggerCommandSearch(this.value)"
+          class="w-full pl-9 pr-4 py-2 text-[12px] font-medium bg-white dark:bg-[#1d2032] text-slate-700 dark:text-slate-200 placeholder-slate-400 rounded-full border border-slate-200/80 dark:border-slate-700/70 focus:outline-none focus:ring-2 focus:ring-[#6558f5]/40 transition-all"
+        />
+        <div id="search-results" class="hidden absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#1b1e30] rounded-2xl shadow-pop border border-slate-100 dark:border-slate-800 overflow-hidden z-40"></div>
+      </div>
+
+      <!-- Right Action Controls -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <!-- Light / Dark Mode Pill Toggle -->
+        <div class="bg-[#ebebf7] dark:bg-[#1e2135] p-1 rounded-full flex items-center text-[11px] font-semibold">
+          <button
+            id="btn-theme-light"
+            onclick="setTheme('light')"
+            class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#6558f5] text-white shadow-sm transition-all duration-200"
+          >
+            <i class="ph-fill ph-sun text-xs"></i>
+            <span>Light</span>
+          </button>
+          <button
+            id="btn-theme-dark"
+            onclick="setTheme('dark')"
+            class="flex items-center gap-1.5 px-3 py-1 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 transition-all duration-200"
+          >
+            <i class="ph-fill ph-moon text-xs"></i>
+            <span>Dark</span>
+          </button>
+        </div>
+
+        <!-- Bell Icon -->
+        <button onclick="switchPage('notifications')" class="relative w-8 h-8 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors" title="Notifications">
+          <i class="ph ph-bell text-[17px]"></i>
+          <span class="w-1.5 h-1.5 rounded-full bg-[#6558f5] absolute top-1.5 right-2"></span>
+        </button>
+
+        <!-- Gear / Settings Icon -->
+        <button onclick="openSettingsModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:rotate-45 transition-all" title="Workspace Settings">
+          <i class="ph ph-gear text-[17px]"></i>
+        </button>
+
+        <!-- Export Data Button with .xls / .csv badge -->
+        <button
+          onclick="exportWorkspaceData()"
+          class="hidden sm:flex items-center gap-2 bg-[#ebebf7] dark:bg-[#1e2135] hover:bg-[#e1e0f5] dark:hover:bg-[#272b44] text-slate-700 dark:text-slate-200 px-3.5 py-2 rounded-full text-[11.5px] font-semibold transition-all active:scale-95"
+        >
+          <i class="ph-bold ph-arrow-down text-xs text-slate-500"></i>
+          <span>Export data</span>
+          <span class="bg-[#7b70f6] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none">.xls</span>
+        </button>
+
+        <!-- Add New Board Button -->
+        <button
+          onclick="openQuickCreateModal('kanban')"
+          class="bg-[#181b2c] dark:bg-[#6558f5] hover:bg-[#272b42] dark:hover:bg-[#5446e8] text-white px-4 py-2.5 rounded-full text-[11.5px] font-semibold shadow-sm hover:shadow-md transition-all active:scale-95"
+        >
+          Add new board
+        </button>
+      </div>
+    </header>
+
+    <!-- =====================================================
+         DYNAMIC VIEW CONTAINER (ALL PAGES)
+         ===================================================== -->
+    <main class="flex-1 px-6 sm:px-10 md:pl-24 md:pr-10 pb-20 md:pb-8 pt-2">
+
+      <!-- ===================================================
+           PAGE 1: MAIN DASHBOARD (EXACT REPLICA OF REFERENCE)
+           =================================================== -->
+      <section id="page-dashboard" class="space-y-6">
+
+        <!-- ROW 1: HERO GREETING + QUICK ADD + 3 ILLUSTRATED FEATURE CARDS -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch animate-stagger-1">
+
+          <!-- Left Greeting Column (4 cols) -->
+          <div class="lg:col-span-4 flex flex-col justify-center pr-2 py-1">
+            <div class="flex items-center gap-3 flex-wrap">
+              <h1 class="text-[30px] sm:text-[33px] font-extrabold tracking-tight text-[#181b2c] dark:text-white leading-tight">
+              Hi, <span id="hero-username">James</span>!
+              </h1>
+              <!-- Overlapping Dual Badges next to Hi, James! -->
+              <div class=" inline-flex items-center bg-[#ebebf8] dark:bg-slate-800 p-1 rounded-full">
+                <button onclick="switchPage('team')" title="Team cluster" class="w-7 h-7 rounded-full bg-white dark:bg-slate-700 flex items-center justify-center shadow-sm relative z-10 hover:scale-105 transition-transform">
+                  <!-- 3purple dots cluster icon like reference -->
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <circle cx="9" cy="9" r="4" fill="#6558f5"/>
+                    <circle cx="16" cy="11" r="3" fill="#9a92f9"/>
+                    <circle cx="11" cy="16" r="3.5" fill="#4f43d9"/>
+                  </svg>
+                </button>
+                <button onclick="switchPage('analytics')" title="Daily ring goal: 80%" class="-ml-1.5 w-7 h-7 rounded-full bg-[#eeedfa] dark:bg-slate-800 border border-white dark:border-slate-700 flex items-center justify-center hover:scale-105 transition-transform">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="8" stroke="#cbc7f7" stroke-width="2.2"/>
+                    <path d="M12 4 A8 8 0 1 1 5.5 16.5" stroke="#6558f5" stroke-width="2.2" stroke-linecap="round"/>
+                    <circle cx="12" cy="12" r="3" stroke="#6558f5" stroke-width="1.6"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <h2 class="text-[28px] sm:text-[31px] font-bold tracking-tight text-[#181b2c] dark:text-white leading-[1.16] mt-0.5">
+              What are your<br/>plans for today?
+            </h2>
+
+            <p class="text-[12.5px] text-slate-500 dark:text-slate-400 mt-3.5 leading-relaxed max-w-[330px] font-medium">
+              This platform is designed to revolutionize the way you organize and access your notes
+            </p>
+          </div>
+
+          <!-- Quick Add Dashed Box + 3 Feature Cards (8 cols) -->
+          <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
+
+            <!-- Card 0: Dashed Lavender Quick Add Box -->
+            <div
+              onclick="openQuickCreateModal('note')"
+              class="dashed-lavender-box min-h-[185px] flex flex-col items-center justify-center cursor-pointer group hover:scale-[1.02] transition-all duration-200 p-4"
+              title="Create new quick note or widget"
+            >
+              <div class="w-9 h-9 rounded-[11px] bg-[#6c60f6] group-hover:bg-[#574ae2] text-white flex items-center justify-center shadow-md group-hover:rotate-90 transition-all duration-300">
+                <i class="ph-bold ph-plus text-base"></i>
+              </div>
+              <span class="text-[11px] font-semibold text-[#6558f5] opacity-0 group-hover:opacity-100 transition-opacity mt-2">Quick Note</span>
+            </div>
+
+            <!-- Card 1: Stay organized -->
+            <div
+              onclick="switchPage('notes')"
+              class="widget-card bg-white dark:bg-[#1b1e30] rounded-[24px] p-5 shadow-feature cursor-pointer flex flex-col justify-between group border border-transparent hover:border-[#6558f5]/20"
+            >
+              <!-- Hand-drawn style Spiral Calendar/Notepad SVG -->
+              <div class="h-24 flex items-center justify-center">
+                <svg class="w-24 h-24 float-illustration group-hover:scale-105 transition-transform" viewBox="0 0 110 100" fill="none">
+                  <!-- Soft purple shadow shape behind -->
+                  <rect x="24" y="22" width="58" height="62" rx="6" transform="rotate(-6 24 22)" fill="#cbc7fc" opacity="0.55"/>
+                  <!-- Main notepad body -->
+                  <rect x="26" y="20" width="58" height="62" rx="6" fill="white" stroke="#181b2c" stroke-width="2"/>
+                  <!-- Purple header strip -->
+                  <path d="M26 26C26 22.6863 28.6863 20 32 20H78C81.3137 20 84 22.6863 84 26V34H26V26Z" fill="#7c71f5" stroke="#181b2c" stroke-width="2"/>
+                  <!-- Spiral rings -->
+                  <path d="M37 14 C35 14, 34 22, 37 23" stroke="#181b2c" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M54 14 C52 14, 51 22, 54 23" stroke="#181b2c" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M71 14 C69 14, 68 22, 71 23" stroke="#181b2c" stroke-width="2" stroke-linecap="round"/>
+                  <!-- Inner note blocks -->
+                  <rect x="33" y="41" width="12" height="10" rx="2" fill="#e2e0fc" stroke="#181b2c" stroke-width="1.6"/>
+                  <text x="36" y="49" fill="#181b2c" font-size="7" font-weight="bold">A</text>
+                  <rect x="33" y="56" width="12" height="14" rx="2" fill="#6558f5" stroke="#181b2c" stroke-width="1.6"/>
+                  <!-- Dashed placeholder area -->
+                  <rect x="51" y="42" width="24" height="22" rx="2" stroke="#181b2c" stroke-width="1.6" stroke-dasharray="3 3"/>
+                  <!-- Cursor click pointer -->
+                  <path d="M72 58 L75 71 L79 66 L85 69 L72 58Z" fill="white" stroke="#181b2c" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="mt-2">
+                <h3 class="text-[13.5px] font-bold text-[#181b2c] dark:text-white group-hover:text-[#6558f5] transition-colors">Stay organized</h3>
+                <p class="text-[10.5px] text-slate-400 dark:text-slate-400 mt-0.5 font-medium">A clear structure for your notes</p>
+              </div>
+            </div>
+
+            <!-- Card 2: Sync your notes -->
+            <div
+              onclick="triggerCloudSync()"
+              class="widget-card bg-white dark:bg-[#1b1e30] rounded-[24px] p-5 shadow-feature cursor-pointer flex flex-col justify-between group border border-transparent hover:border-[#6558f5]/20"
+            >
+              <!-- Hand-drawn style Hanging Clipped Notes SVG -->
+              <div class="h-24 flex items-center justify-center">
+                <svg class="w-28 h-24 float-illustration group-hover:scale-105 transition-transform" style="animation-delay: 0.6s" viewBox="0 0 120 100" fill="none">
+                  <!-- Clothesline wire -->
+                  <path d="M12 22 Q60 32 108 20" stroke="#181b2c" stroke-width="1.8" stroke-linecap="round"/>
+                  <!-- Clips -->
+                  <rect x="44" y="14" width="4" height="12" rx="1.5" fill="#181b2c"/>
+                  <rect x="65" y="16" width="4" height="12" rx="1.5" fill="#181b2c"/>
+                  <rect x="88" y="13" width="4" height="12" rx="1.5" fill="#181b2c"/>
+                  <!-- Left tilted card -->
+                  <g transform="rotate(-24 38 46)">
+                    <rect x="20" y="32" width="34" height="42" rx="4" fill="white" stroke="#181b2c" stroke-width="1.8"/>
+                    <circle cx="30" cy="43" r="4" fill="#7c71f5" stroke="#181b2c" stroke-width="1.4"/>
+                    <line x1="25" y1="54" x2="46" y2="54" stroke="#181b2c" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="25" y1="60" x2="40" y2="60" stroke="#7c71f5" stroke-width="1.5" stroke-linecap="round"/>
+                  </g>
+                  <!-- Center tilted card -->
+                  <g transform="rotate(18 65 56)">
+                    <rect x="48" y="34" width="34" height="44" rx="4" fill="white" stroke="#181b2c" stroke-width="1.8"/>
+                    <rect x="54" y="42" width="22" height="10" rx="2" fill="#7c71f5" stroke="#181b2c" stroke-width="1.4"/>
+                    <line x1="54" y1="59" x2="72" y2="59" stroke="#181b2c" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="54" y1="65" x2="66" y2="65" stroke="#181b2c" stroke-width="1.5" stroke-linecap="round"/>
+                  </g>
+                  <!-- Right hanging card -->
+                  <g transform="rotate(6 92 48)">
+                    <rect x="76" y="28" width="28" height="36" rx="4" fill="white" stroke="#181b2c" stroke-width="1.8"/>
+                    <circle cx="90" cy="40" r="4.5" stroke="#181b2c" stroke-width="1.5"/>
+                    <line x1="82" y1="51" x2="98" y2="51" stroke="#7c71f5" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="82" y1="56" x2="94" y2="56" stroke="#181b2c" stroke-width="1.5" stroke-linecap="round"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="mt-2">
+                <h3 class="text-[13.5px] font-bold text-[#181b2c] dark:text-white group-hover:text-[#6558f5] transition-colors">Sync your notes</h3>
+                <p class="text-[10.5px] text-slate-400 dark:text-slate-400 mt-0.5 font-medium">Ensure that notes are synced</p>
+              </div>
+            </div>
+
+            <!-- Card 3: Collaborate and share -->
+            <div
+              onclick="switchPage('team')"
+              class="widget-card bg-white dark:bg-[#1b1e30] rounded-[24px] p-5 shadow-feature cursor-pointer flex flex-col justify-between group border border-transparent hover:border-[#6558f5]/20"
+            >
+              <!-- Hand-drawn style Browser Windows & Collaboration SVG -->
+              <div class="h-24 flex items-center justify-center">
+                <svg class="w-28 h-24 float-illustration group-hover:scale-105 transition-transform" style="animation-delay: 1.2s" viewBox="0 0 120 100" fill="none">
+                  <!-- Top right mini controls -->
+                  <text x="72" y="18" fill="#6558f5" font-size="9" font-weight="bold">- ❐ ×</text>
+                  <!-- Main window frame -->
+                  <rect x="24" y="22" width="66" height="44" rx="6" fill="white" stroke="#181b2c" stroke-width="2"/>
+                  <!-- Purple inner pill header -->
+                  <rect x="29" y="27" width="22" height="7" rx="3.5" fill="#6558f5" stroke="#181b2c" stroke-width="1.5"/>
+                  <!-- Center floating card -->
+                  <rect x="42" y="38" width="38" height="16" rx="4" fill="#d8d5fc" stroke="#181b2c" stroke-width="1.8"/>
+                  <rect x="49" y="43" width="24" height="6" rx="3" fill="white" stroke="#181b2c" stroke-width="1.3"/>
+                  <!-- Bottom flowchart nodes -->
+                  <rect x="52" y="72" width="12" height="8" rx="2" fill="white" stroke="#181b2c" stroke-width="1.6"/>
+                  <rect x="68" y="72" width="12" height="8" rx="2" fill="#6558f5" stroke="#181b2c" stroke-width="1.6"/>
+                  <rect x="52" y="83" width="10" height="6" rx="1.5" fill="#d8d5fc" stroke="#181b2c" stroke-width="1.5"/>
+                  <path d="M35 66 L35 76 L48 76" stroke="#181b2c" stroke-width="1.6" stroke-linecap="round"/>
+                  <line x1="68" y1="86" x2="92" y2="86" stroke="#181b2c" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="mt-2">
+                <h3 class="text-[13.5px] font-bold text-[#181b2c] dark:text-white group-hover:text-[#6558f5] transition-colors">Collaborate and share</h3>
+                <p class="text-[10.5px] text-slate-400 dark:text-slate-400 mt-0.5 font-medium">Share notes with colleagues</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ROW 2: NOTIFICATIONS + ASSIGNMENTS + MAY 2021 SCHEDULE -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch animate-stagger-2">
+
+          <!-- COLUMN 1: NOTIFICATIONS WIDGET (4 cols) -->
+          <div class="lg:col-span-4 bg-white/80 dark:bg-[#1b1e30]/90 rounded-[28px] p-6 shadow-card flex flex-col justify-between relative">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-[16px] font-bold text-[#181b2c] dark:text-white">Notifications</h3>
+              <button onclick="clearDashboardNotifications()" class="flex items-center gap-1 text-[11.5px] font-medium text-slate-400 hover:text-rose-500 transition-colors">
+                <i class="ph ph-trash text-xs"></i>
+                <span>Clear</span>
+              </button>
+            </div>
+
+            <div id="dashboard-notif-list" class="space-y-4 my-auto">
+              <!-- Rendered dynamically from state.notifications -->
+            </div>
+          </div>
+
+          <!-- COLUMN 2: ASSIGNMENTS WIDGET (4 cols) -->
+          <div class="lg:col-span-4 bg-white/80 dark:bg-[#1b1e30]/90 rounded-[28px] p-6 shadow-card flex flex-col justify-between">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-[16px] font-bold text-[#181b2c] dark:text-white">Assignments</h3>
+              <button onclick="openQuickCreateModal('assignment')" class="flex items-center gap-1 text-[11.5px] font-medium text-slate-400 hover:text-[#6558f5] transition-colors">
+                <i class="ph ph-pencil-simple text-xs"></i>
+                <span>Edit</span>
+              </button>
+            </div>
+
+            <!-- Active Assignment Card Container -->
+            <div id="assignments-container" class="space-y-3 my-auto">
+              <!-- Active assignment card rendered dynamically from state.assignments -->
+            </div>
+
+            <!-- Add new assignment dashed button -->
+            <button
+              onclick="openQuickCreateModal('assignment')"
+              class="dashed-assignment-btn w-full py-3.5 mt-4 flex items-center justify-center gap-2.5 group hover:scale-[1.01] transition-all"
+            >
+              <span class="w-6 h-6 rounded-lg bg-[#6558f5] text-white flex items-center justify-center shadow-sm group-hover:rotate-90 transition-transform">
+                <i class="ph-bold ph-plus text-xs"></i>
+              </span>
+              <span class="text-[12px] font-bold text-[#181b2c] dark:text-white">Add new assignment</span>
+            </button>
+          </div>
+
+          <!-- COLUMN 3: MAY 2021 CALENDAR WIDGET (4 cols) -->
+          <div class="lg:col-span-4 bg-white/80 dark:bg-[#1b1e30]/90 rounded-[28px] p-6 shadow-card flex flex-col justify-between">
+            <!-- Header -->
+            <div class="flex items-center justify-between">
+              <h3 id="calendar-widget-month" class="text-[16px] font-bold text-[#181b2c] dark:text-white">May 2021</h3>
+              <div class="flex items-center gap-1.5">
+                <button onclick="shiftCalendarWeek(-1)" class="w-6 h-6 rounded-full bg-[#efeffb] dark:bg-slate-800 text-slate-500 hover:bg-[#6558f5] hover:text-white flex items-center justify-center transition-colors">
+                  <i class="ph-bold ph-caret-left text-[11px]"></i>
+                </button>
+                <button onclick="shiftCalendarWeek(1)" class="w-6 h-6 rounded-full bg-[#efeffb] dark:bg-slate-800 text-slate-500 hover:bg-[#6558f5] hover:text-white flex items-center justify-center transition-colors">
+                  <i class="ph-bold ph-caret-right text-[11px]"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Week Days Strip (Mon 14 - Sun 20, Fri 18 active) -->
+            <div id="calendar-days-strip" class="grid grid-cols-7 gap-1 text-center my-3">
+              <!-- Populated by JS so clicking days switches schedule -->
+            </div>
+
+            <!-- Schedule Timeline Slots -->
+            <div id="calendar-slots-container" class="space-y-3">
+              <!-- Rendered dynamically from state.calendarDays -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ROW 3: TODAY TASKS (WIDE) + GO PREMIUM! + STATS RINGS & BOARD MEETING -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch animate-stagger-3">
+
+          <!-- LEFT: TODAY TASKS WIDGET (5 cols) -->
+          <div class="lg:col-span-5 bg-white/80 dark:bg-[#1b1e30]/90 rounded-[28px] p-6 shadow-card flex flex-col justify-between">
+            <!-- Header -->
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div class="flex items-center gap-3">
+                <h3 class="text-[16px] font-bold text-[#181b2c] dark:text-white">Today tasks</h3>
+                <!-- Overlapping Team Avatars + +6 Badge -->
+                <div class="flex items-center -space-x-2">
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&auto=format&fit=crop&q=80" onerror="this.src='https://placehold.co/40x40/6558f5/fff?text=A'" class="w-6 h-6 rounded-full object-cover ring-2 ring-white dark:ring-slate-800" alt="Team 1"/>
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&auto=format&fit=crop&q=80" onerror="this.src='https://placehold.co/40x40/68cfa3/fff?text=B'" class="w-6 h-6 rounded-full object-cover ring-2 ring-white dark:ring-slate-800" alt="Team 2"/>
+                  <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=60&auto=format&fit=crop&q=80" onerror="this.src='https://placehold.co/40x40/e0536c/fff?text=C'" class="w-6 h-6 rounded-full object-cover ring-2 ring-white dark:ring-slate-800" alt="Team 3"/>
+                  <span class="w-6 h-6 rounded-full bg-[#6558f5] text-white text-[9.5px] font-bold flex items-center justify-center ring-2 ring-white dark:ring-slate-800">+6</span>
+                </div>
+              </div>
+
+              <!-- View Controls & Edit/Share -->
+              <div class="flex items-center gap-2 text-[11px] font-medium text-slate-400">
+                <button onclick="showToast('Switched to List layout')" class="w-6 h-6 rounded-full bg-[#efeffb] dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-[#6558f5]">
+                  <i class="ph ph-rows text-xs"></i>
+                </button>
+                <button onclick="showToast('Active Grid view')" class="w-6 h-6 rounded-full bg-[#6558f5] text-white flex items-center justify-center shadow-sm">
+                  <i class="ph-fill ph-squares-four text-xs"></i>
+                </button>
+                <button onclick="switchPage('workflows')" class="w-6 h-6 rounded-full bg-[#efeffb] dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-[#6558f5]" title="Open Kanban view">
+                  <i class="ph ph-columns text-xs"></i>
+                </button>
+                <button onclick="openQuickCreateModal('task')" class="flex items-center gap-1 ml-1 hover:text-[#6558f5] transition-colors">
+                  <i class="ph ph-pencil-simple text-xs"></i>
+                  <span>Edit</span>
+                </button>
+                <button onclick="copyShareLink()" class="flex items-center gap-1 ml-1 hover:text-[#6558f5] transition-colors">
+                  <i class="ph ph-share-network text-xs"></i>
+                  <span>Share</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Tasks List (Click any task row to advance its completion %) -->
+            <div id="today-tasks-list" class="space-y-2.5 my-auto">
+              <!-- Rendered dynamically by JS for interactive progress clicking -->
+            </div>
+          </div>
+
+          <!-- CENTER: GO PREMIUM! PROMO CARD (2 cols) -->
+          <div class="lg:col-span-2 bg-[#6558f5] rounded-[28px] p-5 text-white shadow-lg flex flex-col items-center justify-between text-center relative overflow-hidden group">
+            <!-- Subtle decorative glow -->
+            <div class="absolute -top-10 -right-10 w-28 h-28 rounded-full bg-white/10 pointer-events-none"></div>
+
+            <!-- Hand-drawn Gift Box & Hands SVG Illustration matching reference -->
+            <div class="mt-1">
+              <svg class="w-28 h-24 mx-auto group-hover:scale-105 transition-transform duration-300" viewBox="0 0 120 105" fill="none">
+                <!-- Sparkles & confetti around gift -->
+                <text x="35" y="16" fill="#181b2c" font-size="9" font-weight="bold">×</text>
+                <circle cx="88" cy="24" r="2" fill="white"/>
+                <circle cx="26" cy="40" r="2" fill="#a8a0ff"/>
+                <rect x="65" y="10" width="5" height="5" rx="1" stroke="#181b2c" stroke-width="1.3"/>
+                <path d="M28 24 Q34 18 42 22" stroke="white" stroke-width="1.4" stroke-dasharray="2 2" fill="none"/>
+                <path d="M84 16 Q92 22 90 32" stroke="#181b2c" stroke-width="1.4" stroke-dasharray="2 2" fill="none"/>
+
+                <!-- Gift Box Ribbon Bow -->
+                <path d="M60 28 C50 18, 44 26, 56 30" stroke="white" stroke-width="2" fill="#181b2c"/>
+                <path d="M60 28 C70 18, 76 26, 64 30" stroke="white" stroke-width="2" fill="#181b2c"/>
+
+                <!-- Gift Box Lid -->
+                <rect x="40" y="29" width="40" height="10" rx="2" fill="white" stroke="#181b2c" stroke-width="1.8"/>
+                <!-- Gift Box Base -->
+                <rect x="43" y="39" width="34" height="24" rx="2" fill="#181b2c" stroke="white" stroke-width="1.6"/>
+                <!-- Vertical Ribbon -->
+                <rect x="56" y="29" width="8" height="34" fill="#6558f5" stroke="white" stroke-width="1.4"/>
+
+                <!-- Left & Right Hands holding up the gift -->
+                <path d="M28 76 L36 60 L45 64 L40 82 Z" fill="white" stroke="#181b2c" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M36 60 C34 50, 40 46, 42 54" fill="white" stroke="#181b2c" stroke-width="1.8"/>
+
+                <path d="M92 76 L84 60 L75 64 L80 82 Z" fill="white" stroke="#181b2c" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M84 60 C86 50, 80 46, 78 54" fill="white" stroke="#181b2c" stroke-width="1.8"/>
+              </svg>
+            </div>
+
+            <div class="my-2">
+              <h3 class="text-[16px] font-extrabold tracking-tight">Go premium!</h3>
+              <p class="text-[10px] text-white/80 leading-relaxed mt-1.5 px-1 font-medium">
+                Gain access to a range of benefits designed to enhance your user experience
+              </p>
+            </div>
+
+            <button
+              onclick="openPremiumModal()"
+              class="w-full py-2.5 bg-[#181b2c] hover:bg-[#252942] text-white text-[11px] font-bold rounded-full shadow-md transition-all active:scale-95"
+            >
+              Find out more
+            </button>
+          </div>
+
+          <!-- RIGHT COLUMN: 2 RING GAUGE CARDS + BOARD MEETING CARD (5 cols) -->
+          <div class="lg:col-span-5 flex flex-col justify-between gap-5">
+
+            <!-- Top Sub-Row: 2 Circular Progress Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+              <!-- Gauge Card 1: 90% DATA RESEARCH / Marketing -->
+              <div class="widget-card bg-white/90 dark:bg-[#1b1e30] rounded-[24px] p-4 sm:p-5 shadow-card flex flex-col justify-between">
+                <div class="flex items-center gap-3.5">
+                  <!-- SVG Circular Gauge 90% -->
+                  <div class="relative w-14 h-14 shrink-0 flex items-center justify-center">
+                    <svg class="w-14 h-14" viewBox="0 0 60 60">
+                      <circle cx="30" cy="30" r="24" stroke="#e8f7f0" class="dark:stroke-slate-800" stroke-width="4.5" fill="none"/>
+                      <circle
+                        id="ring-marketing"
+                        class="progress-ring-circle"
+                        cx="30" cy="30" r="24"
+                        stroke="#68cfa3"
+                        stroke-width="4.5"
+                        stroke-dasharray="150.8"
+                        stroke-dashoffset="15.08"
+                        stroke-linecap="round"
+                        fill="none"
+                      />
+                    </svg>
+                    <span id="ring-marketing-text" class="absolute text-[11.5px] font-extrabold text-[#181b2c] dark:text-white">90%</span>
+                  </div>
+                  <div>
+                    <span class="text-[8.5px] font-extrabold tracking-wider uppercase text-[#68cfa3] block">DATA RESEARCH</span>
+                    <h4 class="text-[14px] font-bold text-[#181b2c] dark:text-white mt-0.5">Marketing</h4>
+                  </div>
+                </div>
+                <div class="mt-3.5 text-[10.5px] text-slate-400 font-medium leading-snug">
+                  <p id="marketing-marked">You marked <span class="font-bold text-slate-500 dark:text-slate-300">5/5</span></p>
+                  <p id="marketing-left">All assignments are done!</p>
+                </div>
+              </div>
+
+              <!-- Gauge Card 2: 65% UX/UI DESIGN / Typography -->
+              <div class="widget-card bg-white/90 dark:bg-[#1b1e30] rounded-[24px] p-4 sm:p-5 shadow-card flex flex-col justify-between">
+                <div class="flex items-center gap-3.5">
+                  <!-- SVG Circular Gauge 65% -->
+                  <div class="relative w-14 h-14 shrink-0 flex items-center justify-center">
+                    <svg class="w-14 h-14" viewBox="0 0 60 60">
+                      <circle cx="30" cy="30" r="24" stroke="#fce8ec" class="dark:stroke-slate-800" stroke-width="4.5" fill="none"/>
+                      <circle
+                        id="ring-typography"
+                        class="progress-ring-circle"
+                        cx="30" cy="30" r="24"
+                        stroke="#d9536f"
+                        stroke-width="4.5"
+                        stroke-dasharray="150.8"
+                        stroke-dashoffset="52.78"
+                        stroke-linecap="round"
+                        fill="none"
+                      />
+                    </svg>
+                    <span id="ring-typography-text" class="absolute text-[11.5px] font-extrabold text-[#181b2c] dark:text-white">65%</span>
+                  </div>
+                  <div>
+                    <span class="text-[8.5px] font-extrabold tracking-wider uppercase text-[#d9536f] block">UX/UI DESIGN</span>
+                    <h4 class="text-[14px] font-bold text-[#181b2c] dark:text-white mt-0.5">Typography</h4>
+                  </div>
+                </div>
+                <div class="mt-3.5 flex items-end justify-between gap-2">
+                  <div class="text-[10.5px] text-slate-400 font-medium leading-snug">
+                    <p id="typo-marked-text">You marked <span class="font-bold text-slate-500 dark:text-slate-300">3/5</span></p>
+                    <p id="typo-left-text">2 assignments left</p>
+                  </div>
+                  <button
+                    onclick="incrementTypographyCheck()"
+                    class="bg-[#6c60f6] hover:bg-[#5648e8] text-white text-[10.5px] font-bold px-3.5 py-1.5 rounded-full shadow-sm transition-all active:scale-95"
+                  >
+                    Check
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Bottom Sub-Row: Board meeting Card -->
+            <div class="widget-card bg-white/90 dark:bg-[#1b1e30] rounded-[24px] p-5 shadow-card flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <h3 class="text-[16px] font-bold text-[#181b2c] dark:text-white">Board meeting</h3>
+                <button onclick="rescheduleBoardMeeting()" class="flex items-center gap-1 text-[11.5px] font-medium text-slate-400 hover:text-[#6558f5] transition-colors">
+                  <i class="ph ph-pencil-simple text-xs"></i>
+                  <span>Edit</span>
+                </button>
+              </div>
+
+              <div class="flex items-center gap-2 mt-1">
+                <span class="w-2 h-2 rounded-full bg-[#6558f5]"></span>
+                <span id="board-meeting-time" class="text-[11px] text-slate-400 font-medium">March 24 at 4:00 PM</span>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-3 mt-4">
+                <p class="text-[11.5px] text-slate-500 dark:text-slate-300 font-medium leading-snug max-w-[200px]">
+                  Meeting with John Smith,<br/>4th floor, room 159
+                </p>
+                <div class="flex items-center gap-2.5">
+                  <button
+                    onclick="rescheduleBoardMeeting()"
+                    class="bg-[#ebebf8] dark:bg-slate-800 hover:bg-[#dfdef5] text-[#181b2c] dark:text-slate-200 text-[11px] font-bold px-4 py-2.5 rounded-full transition-all active:scale-95"
+                  >
+                    Reschedule
+                  </button>
+                  <button
+                    id="btn-accept-invite"
+                    onclick="acceptBoardInvite()"
+                    class="bg-[#6c60f6] hover:bg-[#584be6] text-white text-[11px] font-bold px-4 py-2.5 rounded-full shadow-sm transition-all active:scale-95"
+                  >
+                    Accept invite
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ===================================================
+           PAGE 2: WORKFLOWS & KANBAN BOARD (TOP NAV & SIDEBAR)
+           =================================================== -->
+      <section id="page-workflows" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 animate-stagger-1">
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#6558f5]">Automation & Sprints</span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#181b2c] dark:text-white mt-0.5">Workflows & Kanban Studio</h1>
+          </div>
+          <div class="flex items-center gap-3">
+            <!-- Filter Pills -->
+            <div class="bg-white dark:bg-[#1b1e30] p-1 rounded-full shadow-sm flex items-center text-xs font-semibold">
+              <button onclick="filterKanban('all')" class="kanban-filter-btn px-3.5 py-1.5 rounded-full bg-[#6558f5] text-white" data-filter="all">All</button>
+              <button onclick="filterKanban('Motion design')" class="kanban-filter-btn px-3.5 py-1.5 rounded-full text-slate-500 hover:text-slate-800 dark:text-slate-300" data-filter="Motion design">Motion</button>
+              <button onclick="filterKanban('UX/UI design')" class="kanban-filter-btn px-3.5 py-1.5 rounded-full text-slate-500 hover:text-slate-800 dark:text-slate-300" data-filter="UX/UI design">UX/UI</button>
+              <button onclick="filterKanban('Marketing')" class="kanban-filter-btn px-3.5 py-1.5 rounded-full text-slate-500 hover:text-slate-800 dark:text-slate-300" data-filter="Marketing">Marketing</button>
+            </div>
+            <button onclick="openQuickCreateModal('kanban')" class="bg-[#6558f5] hover:bg-[#5346e0] text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-sm flex items-center gap-1.5">
+              <i class="ph-bold ph-plus"></i> New Workflow Card
+            </button>
+          </div>
+        </div>
+
+        <!-- Automation Rules Strip -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 animate-stagger-2">
+          <div class="bg-white dark:bg-[#1b1e30] rounded-2xl p-4 shadow-card flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-[#efeffb] dark:bg-slate-800 text-[#6558f5] flex items-center justify-center">
+                <i class="ph-fill ph-lightning text-lg"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-[#181b2c] dark:text-white">Auto-sync Notes to Slack</h4>
+                <p class="text-[11px] text-slate-400">Triggers on High Priority tag</p>
+              </div>
+            </div>
+            <input type="checkbox" checked onchange="showToast('Workflow automation updated')" class="w-4 h-4 accent-[#6558f5] cursor-pointer"/>
+          </div>
+
+          <div class="bg-white dark:bg-[#1b1e30] rounded-2xl p-4 shadow-card flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-[#e6f7f0] dark:bg-slate-800 text-[#68cfa3] flex items-center justify-center">
+                <i class="ph-fill ph-check-circle text-lg"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-[#181b2c] dark:text-white">Update Ring Gauges Live</h4>
+                <p class="text-[11px] text-slate-400">When card moves to Completed</p>
+              </div>
+            </div>
+            <input type="checkbox" checked onchange="showToast('Workflow automation updated')" class="w-4 h-4 accent-[#6558f5] cursor-pointer"/>
+          </div>
+
+          <div class="bg-white dark:bg-[#1b1e30] rounded-2xl p-4 shadow-card flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-[#fce8ec] dark:bg-slate-800 text-[#e0536c] flex items-center justify-center">
+                <i class="ph-fill ph-calendar-check text-lg"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-[#181b2c] dark:text-white">Auto-schedule Review</h4>
+                <p class="text-[11px] text-slate-400">Book 30m slot with Rachel Lee</p>
+              </div>
+            </div>
+            <input type="checkbox" onchange="showToast('Workflow automation updated')" class="w-4 h-4 accent-[#6558f5] cursor-pointer"/>
+          </div>
+        </div>
+
+        <!-- 4-Column Interactive Kanban Board -->
+        <div id="kanban-board-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 animate-stagger-3">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </section>
+
+      <!-- ===================================================
+           PAGE 3: INTEGRATIONS MARKETPLACE (TOP NAV)
+           =================================================== -->
+      <section id="page-integrations" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 animate-stagger-1">
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#6558f5]">Connected Ecosystem</span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#181b2c] dark:text-white mt-0.5">Apps & Integrations</h1>
+          </div>
+          <div class="flex items-center gap-2 bg-white dark:bg-[#1b1e30] px-4 py-2 rounded-full shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-[#68cfa3]"></span>
+            <span id="connected-apps-count" class="text-xs font-bold text-[#181b2c] dark:text-white">5 Connected</span>
+          </div>
+        </div>
+
+        <div id="integrations-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 animate-stagger-2">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- ===================================================
+           PAGE 4: NOTES STUDIO (SIDEBAR ICON 7 & HERO CARDS)
+           =================================================== -->
+      <section id="page-notes" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 animate-stagger-1">
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#6558f5]">Structured Knowledge</span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#181b2c] dark:text-white mt-0.5">Notes Studio</h1>
+          </div>
+          <button onclick="createNewStudioNote()" class="bg-[#6558f5] hover:bg-[#5245e0] text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-sm flex items-center gap-1.5">
+            <i class="ph-bold ph-plus"></i> New Note
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-stagger-2">
+          <!-- Left Notes List (4 cols) -->
+          <div id="studio-notes-list" class="lg:col-span-4 space-y-3">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Right Live Note Editor (8 cols) -->
+          <div class="lg:col-span-8 bg-white dark:bg-[#1b1e30] rounded-[28px] p-6 sm:p-8 shadow-card flex flex-col justify-between min-h-[470px]">
+            <div>
+              <div class="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-slate-100 dark:border-slate-800">
+                <span id="active-note-category" class="text-[11px] font-bold text-[#6558f5] bg-[#efeffb] dark:bg-slate-800 px-3 py-1 rounded-full">Product Design</span>
+                <div class="flex items-center gap-3 text-xs text-slate-400">
+                  <span id="note-sync-indicator" class="flex items-center gap-1 text-[#68cfa3] font-semibold">
+                    <i class="ph-fill ph-cloud-check"></i> Synced just now
+                  </span>
+                  <button onclick="saveCurrentStudioNote()" class="bg-[#181b2c] dark:bg-[#6558f5] text-white px-3.5 py-1.5 rounded-full text-[11px] font-bold">
+                    Save Note
+                  </button>
+                </div>
+              </div>
+
+              <input
+                id="active-note-title"
+                type="text"
+                value="Packaging Concept & Brand Guidelines 2021"
+                oninput="markNoteUnsaved()"
+                class="w-full text-xl sm:text-2xl font-extrabold text-[#181b2c] dark:text-white bg-transparent focus:outline-none mt-5"
+              />
+
+              <textarea
+                id="active-note-body"
+                rows="11"
+                oninput="markNoteUnsaved()"
+                class="w-full mt-4 text-[13.5px] leading-relaxed text-slate-600 dark:text-slate-300 bg-transparent focus:outline-none resize-none font-medium"
+              >Key objectives for today's Landing & Packaging meeting with Rachel Lee and Ken Smith:
+
+1. Finalize tactile matte finish for the primary product box.
+2. Align typography hierarchy with our 65% completed UX/UI Design sprint.
+3. Export Q2 research data (.xls) for the Board Meeting with John Smith in Room 159.
+
+Action items:
+• Send out reminders to all 6 design team members before 10:30 AM.
+• Verify cloud sync across mobile and desktop workspaces.</textarea>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400">
+              <div class="flex items-center gap-2">
+                <span>Collaborators:</span>
+                <span class="font-bold text-[#181b2c] dark:text-white">James, Rachel Lee, Ken Smith</span>
+              </div>
+              <button onclick="triggerCloudSync()" class="text-[#6558f5] font-bold hover:underline flex items-center gap-1">
+                <i class="ph-bold ph-arrows-clockwise"></i> Sync Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           PAGE 5: ANALYTICS & REPORTS (SIDEBAR ICON 3)
+           =================================================== -->
+      <section id="page-analytics" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 animate-stagger-1">
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#68cfa3]">PRO Workspace Telemetry</span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#181b2c] dark:text-white mt-0.5">Analytics & Team Velocity</h1>
+          </div>
+          <button onclick="exportWorkspaceData()" class="bg-[#181b2c] dark:bg-[#6558f5] text-white text-xs font-bold px-4 py-2.5 rounded-full flex items-center gap-2">
+            <i class="ph-bold ph-download-simple"></i> Download Full Report (.xls)
+          </button>
+        </div>
+
+        <!-- KPI Top Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 animate-stagger-2">
+          <div class="bg-white dark:bg-[#1b1e30] rounded-[24px] p-5 shadow-card">
+            <span class="text-[11px] font-bold text-slate-400">Notes Organized</span>
+            <div class="flex items-end justify-between mt-2">
+              <h3 id="kpi-notes" class="text-3xl font-extrabold text-[#181b2c] dark:text-white">1,284</h3>
+              <span id="kpi-notes-pill" class="text-xs font-bold text-[#68cfa3] bg-[#e6f7f0] dark:bg-slate-800 px-2.5 py-1 rounded-full">+18.4%</span>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-[#1b1e30] rounded-[24px] p-5 shadow-card">
+            <span class="text-[11px] font-bold text-slate-400">Avg. Assignment Completion</span>
+            <div class="flex items-end justify-between mt-2">
+              <h3 id="kpi-completion" class="text-3xl font-extrabold text-[#6558f5]">82.5%</h3>
+              <span id="kpi-completion-pill" class="text-xs font-bold text-[#6558f5] bg-[#efeffb] dark:bg-slate-800 px-2.5 py-1 rounded-full">+6.2%</span>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-[#1b1e30] rounded-[24px] p-5 shadow-card">
+            <span class="text-[11px] font-bold text-slate-400">Deep Focus Time (Week)</span>
+            <div class="flex items-end justify-between mt-2">
+              <h3 id="kpi-focus" class="text-3xl font-extrabold text-[#181b2c] dark:text-white">34h 20m</h3>
+              <span id="kpi-focus-pill" class="text-xs font-bold text-[#68cfa3] bg-[#e6f7f0] dark:bg-slate-800 px-2.5 py-1 rounded-full">On Track</span>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-[#1b1e30] rounded-[24px] p-5 shadow-card">
+            <span class="text-[11px] font-bold text-slate-400">Active Collaborators</span>
+            <div class="flex items-end justify-between mt-2">
+              <h3 id="kpi-collab" class="text-3xl font-extrabold text-[#e0536c]">9 Members</h3>
+              <span id="kpi-collab-pill" class="text-xs font-bold text-[#e0536c] bg-[#fce8ec] dark:bg-slate-800 px-2.5 py-1 rounded-full">100% Online</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bar Chart & Department Breakdown -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-stagger-3">
+          <div class="lg:col-span-7 bg-white dark:bg-[#1b1e30] rounded-[28px] p-6 shadow-card">
+            <h3 class="text-base font-bold text-[#181b2c] dark:text-white mb-6">Weekly Productivity Hours (May 14 – May 20)</h3>
+            <div class="grid grid-cols-7 gap-3 items-end h-52 pt-6 px-2">
+              <!-- Rendered dynamically from state.weeklyHours -->
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 bg-white dark:bg-[#1b1e30] rounded-[28px] p-6 shadow-card flex flex-col justify-between">
+            <div id="dept-bars" class="space-y-4 my-auto py-4"></div>
+            <p class="text-[11px] text-slate-400">Updated automatically via real-time note & task tracking.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           PAGE 6: FULL CALENDAR SCHEDULE (SIDEBAR ICON 5)
+           =================================================== -->
+      <section id="page-calendar" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 animate-stagger-1">
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#6558f5]">Time-Blocked Planner</span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#181b2c] dark:text-white mt-0.5">May 2021 Master Schedule</h1>
+          </div>
+          <button onclick="openNewEventModal()" class="bg-[#6558f5] text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-sm flex items-center gap-1.5">
+            <i class="ph-bold ph-plus"></i> Schedule Event
+          </button>
+        </div>
+
+        <div id="calendar-events-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5 animate-stagger-2"></div>
+      </section>
+
+      <!-- ===================================================
+           PAGE 7: TEAM & PROFILE DIRECTORY (SIDEBAR ICON 2)
+           =================================================== -->
+      <section id="page-team" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 animate-stagger-1">
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#6558f5]">Workspace Directory</span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#181b2c] dark:text-white mt-0.5">Colleagues & Collaborators</h1>
+          </div>
+          <button onclick="openInviteModal()" class="bg-[#181b2c] dark:bg-[#6558f5] text-white text-xs font-bold px-4 py-2.5 rounded-full flex items-center gap-1.5">
+            <i class="ph-bold ph-user-plus"></i> Invite Colleague
+          </button>
+        </div>
+
+        <div id="team-directory-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 animate-stagger-2">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <!-- ===================================================
+           PAGE 8: NOTIFICATIONS & MESSAGES INBOX (SIDEBAR 4 & 6)
+           =================================================== -->
+      <section id="page-notifications" class="hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 animate-stagger-1">
+          <div>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#6558f5]">Communication Hub</span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#181b2c] dark:text-white mt-0.5">Notifications & Team Inbox</h1>
+          </div>
+          <button onclick="markAllNotificationsRead()" class="text-xs font-bold text-[#6558f5] bg-white dark:bg-[#1b1e30] px-4 py-2 rounded-full shadow-sm">
+            Mark all as read
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-stagger-2">
+          <div id="notifications-feed" class="lg:col-span-5 space-y-3"></div>
+
+          <div class="lg:col-span-7 bg-white dark:bg-[#1b1e30] rounded-[28px] p-6 shadow-card flex flex-col justify-between min-h-[340px]">
+            <div>
+              <div class="pb-3 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-bold text-[#181b2c] dark:text-white">Direct Thread: Ken Smith</h3>
+                  <p class="text-[11px] text-slate-400">Topic: Message | Product design</p>
+                </div>
+                <span class="text-[10px] font-bold bg-[#e6f7f0] text-[#68cfa3] px-2.5 py-1 rounded-full">Online</span>
+              </div>
+              <div id="inbox-chat-messages" class="space-y-3 py-4 max-h-56 overflow-y-auto">
+                <!-- Rendered dynamically from state.inbox -->
+              </div>
+            </div>
+            <form onsubmit="sendInboxMessage(event)" class="flex gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <input id="inbox-reply-input" type="text" placeholder="Write a message to Ken Smith..." class="flex-1 bg-[#f7f7fb] dark:bg-slate-800 rounded-full px-4 py-2.5 text-xs text-[#181b2c] dark:text-white focus:outline-none"/>
+              <button type="submit" class="bg-[#6558f5] text-white px-5 py-2.5 rounded-full text-xs font-bold">Send</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- =====================================================
+       INTERACTIVE MODAL (ADD BOARD / ASSIGNMENT / TASK / PREMIUM)
+       ===================================================== -->
+  <div id="modal-backdrop" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div id="modal-box" class="bg-white dark:bg-[#1b1e30] w-full max-w-md rounded-[28px] p-6 sm:p-7 shadow-2xl border border-slate-100 dark:border-slate-800 animate-stagger-1">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <h3 id="modal-title" class="text-lg font-extrabold text-[#181b2c] dark:text-white">Create New Item</h3>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-slate-900">
+          <i class="ph-bold ph-x text-sm"></i>
+        </button>
+      </div>
+      <div id="modal-body" class="py-4"></div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       TOAST NOTIFICATION PILL
+       ===================================================== -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- =====================================================
+       APPLICATION JAVASCRIPT
+       ===================================================== -->
+    <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
