@@ -1,6 +1,7 @@
 # NoteFlow — Dynamic Admin Panel Template
 
-Template panel admin dinamis (single-page app, vanilla JS + Tailwind CSS). Semua view di-render dari satu state store yang dipersist ke `localStorage`: dashboard, workflow kanban, integrasi, catatan, analitik (dihitung live), kalender, tim, dan inbox.
+![Preview panel admin NoteFlow](assets/img/preview.png)
+
 
 ## Jalankan
 
